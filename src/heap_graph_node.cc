@@ -66,7 +66,15 @@ namespace nodex {
     Local<Object> graph_node;
     Local<Object> _cache = Nan::New(graph_node_cache);
     int32_t _id = node->GetId();
-    if (_cache->Has(_id)) {
+// TODO: find which v8 version changed the api
+#if (NODE_MAJOR_VERSION <= 8)
+    int cacheHasId = _cache->Has(_id);
+#else
+    // TODO: find a way to alloc the object on the stack
+     Local<Value> _idValue = Nan::New(_id);
+    int cacheHasId = _cache->Has(_idValue);
+#endif
+    if (cacheHasId) {
       graph_node = _cache->Get(_id)->ToObject();
     } else {
       graph_node = Nan::New(graph_node_template_)->NewInstance();

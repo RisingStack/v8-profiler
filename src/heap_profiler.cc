@@ -1,3 +1,4 @@
+#include "nan.h"
 #include "heap_profiler.h"
 #include "heap_snapshot.h"
 #include "heap_output_stream.h"
@@ -13,7 +14,7 @@ namespace nodex {
   using v8::Object;
   using v8::SnapshotObjectId;
   using v8::String;
-  using v8::TryCatch;
+  using Nan::TryCatch;
   using v8::Value;
 
   HeapProfiler::HeapProfiler() {}
@@ -73,6 +74,7 @@ namespace nodex {
 #endif
 
 #if (NODE_MODULE_VERSION > 0x0038)
+    control = control; // silence the "unused variable" warning
     const HeapSnapshot* snapshot = v8::Isolate::GetCurrent()->GetHeapProfiler()->TakeHeapSnapshot();
 #elif (NODE_MODULE_VERSION > 0x002C)
     const HeapSnapshot* snapshot = v8::Isolate::GetCurrent()->GetHeapProfiler()->TakeHeapSnapshot(control);
